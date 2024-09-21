@@ -12,22 +12,21 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Food {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
     String name;
 
-    String description;
+    String type;
 
-    int price;
+    String email;
 
-    @Column(columnDefinition = "boolean default false")
-    boolean status;
+    String phoneNumber;
 
-    String imgURL;
+    String password;
 
-    @OneToMany(mappedBy = "food")
-    Set<FoodOrder> foodOrders;
+    @OneToMany(mappedBy = "user")
+    Set<Order> order;
 }

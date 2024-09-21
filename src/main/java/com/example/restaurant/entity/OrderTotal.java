@@ -4,30 +4,22 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Food {
+public class OrderTotal {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
     String name;
 
-    String description;
+    int amount;
 
-    int price;
-
-    @Column(columnDefinition = "boolean default false")
-    boolean status;
-
-    String imgURL;
-
-    @OneToMany(mappedBy = "food")
-    Set<FoodOrder> foodOrders;
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    Order order;
 }
