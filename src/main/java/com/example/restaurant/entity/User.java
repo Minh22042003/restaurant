@@ -27,6 +27,8 @@ public class User {
 
     String password;
 
+    String imgURL;
+
     @OneToMany(mappedBy = "user")
     Set<Order> order;
 }
