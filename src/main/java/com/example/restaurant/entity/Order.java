@@ -28,7 +28,7 @@ public class Order {
 
     String order_type;
 
-    String order_status;
+    Boolean order_status;
 
     LocalDateTime order_time;
 
