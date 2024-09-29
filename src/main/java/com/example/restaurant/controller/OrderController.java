@@ -1,6 +1,6 @@
 package com.example.restaurant.controller;
 
-import com.example.restaurant.dto.request.AddOrderRequest;
+import com.example.restaurant.dto.request.AddOrderOnlineRequest;
 import com.example.restaurant.dto.request.UpdateOrderRequest;
 import com.example.restaurant.entity.Order;
 import com.example.restaurant.service.OrderService;
@@ -20,13 +20,13 @@ public class OrderController {
                                          @RequestParam("customer_name") String customer_name,
                                          @RequestParam("customer_address") String customer_address,
                                           @RequestParam(value = "user_id", required = false) String user_id){
-        AddOrderRequest request = AddOrderRequest.builder()
+        AddOrderOnlineRequest request = AddOrderOnlineRequest.builder()
                 .customer_name(customer_name)
                 .customer_mail(customer_mail)
                 .customer_address(customer_address)
                 .user_id(user_id)
                 .build();
-        return ResponseEntity.ok().body(orderService.addOrder(request));
+        return ResponseEntity.ok().body(orderService.addOrderOnline(request));
     }
 
     @GetMapping

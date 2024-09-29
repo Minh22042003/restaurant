@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,11 +28,13 @@ public class FoodController {
         return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/upload")
     public ResponseEntity<String> addImage(@RequestParam MultipartFile multipartFile){
         return ResponseEntity.ok().body(foodService.addImage(multipartFile));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<Food> addNewFood(@RequestParam("name") String name,
                                            @RequestParam("description") String description,
@@ -59,6 +62,7 @@ public class FoodController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(food);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{foodId}")
     public ResponseEntity<Food> updateFood(@PathVariable String foodId,
                                            @RequestParam("name") String name,
@@ -81,6 +85,7 @@ public class FoodController {
         return ResponseEntity.ok(updatedFood);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{foodId}")
     public void deleteFood(@PathVariable String foodId){
         foodService.deleteFood(foodId);

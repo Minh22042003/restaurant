@@ -1,9 +1,10 @@
 package com.example.restaurant.service;
 
-import com.example.restaurant.dto.request.AddOrderRequest;
+import com.example.restaurant.dto.request.AddOrderOnlineRequest;
+import com.example.restaurant.dto.request.FoodOrderDTO;
 import com.example.restaurant.dto.request.UpdateOrderRequest;
-import com.example.restaurant.entity.Order;
-import com.example.restaurant.repository.OrderRepository;
+import com.example.restaurant.entity.*;
+import com.example.restaurant.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,26 +12,64 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private FoodRepository foodRepository;
+    @Autowired
+    private FoodOrderRepository foodOrderRepository;
+    @Autowired
+    private OrderTotalRepository orderTotalRepository;
 
-    public Order addOrder(AddOrderRequest request){
+    public Order addOrderOnline(AddOrderOnlineRequest request){
+        //tao order
         Order order = Order.builder()
                 .customer_name(request.getCustomer_name())
                 .customer_mail(request.getCustomer_mail())
                 .customer_address(request.getCustomer_address())
+                .order_type(TypeOrder.Online.name())
                 .order_status(false)
                 .build();
-        if (request.getUser_id().isEmpty()){
-            order.setOrder_type("Directly at the counter");
+
+        //tim user
+        Optional<User> user = userRepository.findByEmail(request.getCustomer_mail());
+        user.ifPresent(order::setUser);
+
+        //Tong tien cua order
+        int sum = 0;
+
+        //tao FoodOrder
+        Set<FoodOrder> foodOrders = new HashSet<>();
+        for (FoodOrderDTO order1 : request.getFoodOrderDTOS()){
+            Optional<Food> food = foodRepository.findById(order1.getFoodId());
+            if (food.isPresent()){
+                sum = sum + (food.get().getPrice()*order1.getQuatity());
+                FoodOrder foodOrder = FoodOrder.builder()
+                        .food(food.get())
+                        .order(order)
+                        .item_quantity(order1.getQuatity())
+                        .build();
+                foodOrderRepository.save(foodOrder);
+                foodOrders.add(foodOrder);
+            }
         }
-        else {
-            order.setOrder_type("Online");
-        }
+
+        //tao orderTotal
+        OrderTotal orderTotal = OrderTotal.builder()
+                .order(order)
+                .amount(sum)
+                .build();
+        orderTotalRepository.save(orderTotal);
+
+        order.setFoodOrders(foodOrders);
         return orderRepository.save(order);
     }
 

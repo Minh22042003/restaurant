@@ -28,6 +28,8 @@ public class Food {
 
     String imgURL;
 
+    String category;
+
     @OneToMany(mappedBy = "food")
     Set<FoodOrder> foodOrders;
 }
