@@ -5,8 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Builder
@@ -20,24 +19,23 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    String customer_mail;
-
-    String customer_name;
-
-    String customer_address;
-
-    String order_type;
-
     Boolean order_status;
 
-    LocalDateTime order_time;
+    int total;
 
-    @OneToMany(mappedBy = "order")
-    Set<FoodOrder> foodOrders;
+    String description;
+
+    LocalDateTime order_time;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @OneToOne
+    Payment payment;
+
+    @OneToMany
+    List<FoodOrder> listFoodOrder;
 
     @PrePersist
     protected void onCreate(){

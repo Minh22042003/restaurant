@@ -24,8 +24,8 @@ public class FoodOrder {
     Food food;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    Order order;
+    @JoinColumn(name = "user_id")
+    User user;
 
     int item_quantity;
 }

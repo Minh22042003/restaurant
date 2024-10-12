@@ -4,22 +4,22 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Entity
-@Data
-@NoArgsConstructor
+import java.util.UUID;
+
+@Getter
+@Setter
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
+@Entity
+@Table(name = "restaurant_branch")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class OrderTotal {
+public class RestaurantBranch {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", nullable = false)
     String id;
 
-    String name;
+    String description;
 
-    int amount;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    Order order;
+    String address;
 }

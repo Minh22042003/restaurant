@@ -35,10 +35,16 @@ public class User implements UserDetails {
 
     String imgURL;
 
+    String credit_number;
+
     String role;
 
     @OneToMany(mappedBy = "user")
     Set<Order> order;
+
+    @OneToOne
+    @JoinColumn(name = "address_user_id")
+    AddressUser addressUser;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

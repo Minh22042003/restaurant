@@ -4,30 +4,27 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
+import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
-@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Table(name = "address_user")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Food {
+public class AddressUser {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    String name;
+    String street;
+
+    String district;
+
+    String city;
 
     String description;
 
-    int price;
-
-    @Column(columnDefinition = "boolean default false")
-    boolean status;
-
-    String imgURL;
-
-    @ManyToOne
-    FoodCategory foodCategory;
 }

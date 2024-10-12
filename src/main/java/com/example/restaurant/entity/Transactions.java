@@ -22,7 +22,6 @@ public class Transactions {
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "order_id", referencedColumnName = "id"),
-            @JoinColumn(name = "tx_type", referencedColumnName = "order_type"),
             @JoinColumn(name = "tx_time", referencedColumnName = "order_time")
     })
     Order order;

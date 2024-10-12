@@ -159,7 +159,7 @@ public class UserService {
         return userRepository.findById(id).get();
     }
 
-    public User updateUser(UpdateUserRequest request, String id){
+    public User adminUpdateUser(UpdateUserRequest request, String id){
         try {
             Optional<User> userOptional = userRepository.findById(id);
             if (userOptional.isEmpty()){
@@ -186,5 +186,32 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating user: " + e.getMessage());
         }
 
+    }
+
+    public User userUpdateUser(UpdateUserRequest request, String email) {
+        try {
+            Optional<User> userOptional = userRepository.findByEmail(email);
+            if (userOptional.isEmpty()){
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "User does not exists");
+            }
+
+            User user = userOptional.get();
+
+            user.setName(request.getName());
+            user.setPhoneNumber(request.getPhoneNumber());
+            user.setType("Customer");
+
+            if (request.getFile() != null && !request.getFile().isEmpty()) {
+                String fileName = foodService.imageProcess(request.getFile());
+                user.setImgURL("/uploads/" + fileName);
+            }
+
+            return userRepository.save(user);
+        }catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating user: " + e.getMessage());
+        }
     }
 }

@@ -10,5 +10,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FoodOrderDTO {
     String foodId;
-    int quatity;
+    String userId;
+    int quantity;
 }
