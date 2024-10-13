@@ -12,12 +12,13 @@ import java.util.UUID;
 @Table(name = "food_category")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FoodCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    UUID id;
+    String id;
 
     String name;
 

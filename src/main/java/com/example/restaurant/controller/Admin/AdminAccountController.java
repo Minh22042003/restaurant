@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -23,16 +22,7 @@ public class AdminAccountController {
     }
 
     @PostMapping
-    public ResponseEntity<User> addUser(@RequestParam("name") String name,
-                                        @RequestParam("email") String email,
-                                        @RequestParam("phoneNumber") String phoneNumber,
-                                        @RequestParam("password") String password){
-        AddNewUserRequest request = AddNewUserRequest.builder()
-                .name(name)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .password(password)
-                .build();
+    public ResponseEntity<User> addUser(@ModelAttribute AddNewUserRequest request){
         return ResponseEntity.ok().body(userService.addUser(request));
     }
 
@@ -54,18 +44,9 @@ public class AdminAccountController {
 
     @PutMapping("/{userId}")
     public ResponseEntity<User> adminUpdateUser(@PathVariable String userId,
-                                           @RequestParam("name") String name,
-                                           @RequestParam("email") String email,
-                                           @RequestParam("phoneNumber") String phoneNumber,
-                                           @RequestParam(value = "file", required = false) MultipartFile file){
-        UpdateUserRequest updateUserRequest = UpdateUserRequest.builder()
-                .name(name)
-                .email(email)
-                .phoneNumber(phoneNumber)
-                .file(file)
-                .build();
+                                           @ModelAttribute UpdateUserRequest request){
 
-        User user = userService.adminUpdateUser(updateUserRequest, userId);
+        User user = userService.adminUpdateUser(request, userId);
 
         return ResponseEntity.ok().body(user);
     }

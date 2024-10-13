@@ -3,6 +3,8 @@ package com.example.restaurant.service;
 import com.example.restaurant.dto.request.AddNewFoodRequest;
 import com.example.restaurant.dto.request.UpdateFoodDescriptionRequest;
 import com.example.restaurant.entity.Food;
+import com.example.restaurant.entity.FoodCategory;
+import com.example.restaurant.repository.FoodCategoryRepository;
 import com.example.restaurant.repository.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,8 @@ public class FoodService {
 
     @Value("${app.upload.dir}")
     private String uploadDir;
+    @Autowired
+    private FoodCategoryRepository foodCategoryRepository;
 
     public String addImage(MultipartFile multipartFile){
         try {
@@ -44,11 +48,15 @@ public class FoodService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Food with this name already exists");
         }
 
-        Food newFood = Food.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .price(request.getPrice())
-                .build();
+        Optional<FoodCategory> foodCategory = foodCategoryRepository.findById(request.getFood_category_id());
+
+        Food newFood = new Food();
+
+        newFood.setName(request.getName());
+        newFood.setDescription(request.getDescription());
+        newFood.setPrice(request.getPrice());
+
+        foodCategory.ifPresent(newFood::setFoodCategory);
 
         if (request.getFile() != null && !request.getFile().isEmpty()) {
             String fileName = imageProcess(request.getFile());
@@ -110,6 +118,10 @@ public class FoodService {
             food.setName(request.getName());
             food.setDescription(request.getDescription());
             food.setPrice(request.getPrice());
+
+            Optional<FoodCategory> foodCategory = foodCategoryRepository.findById(request.getFood_category_id());
+            foodCategory.ifPresent(food::setFoodCategory);
+
 
             if (request.getFile() != null && !request.getFile().isEmpty()) {
                 String fileName = imageProcess(request.getFile());
